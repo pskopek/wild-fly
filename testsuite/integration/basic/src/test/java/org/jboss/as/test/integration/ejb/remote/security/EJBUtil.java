@@ -34,7 +34,7 @@ import javax.naming.NamingException;
  *
  * @author Josef Cacek
  */
-class EJBUtil {
+public class EJBUtil {
 
     protected static final String APPLICATION_NAME = "ejb-remote-security-test";
 
@@ -51,14 +51,27 @@ class EJBUtil {
      * @return
      * @throws NamingException
      */
-    @SuppressWarnings("unchecked")
     public static <T> T lookupEJB(Class<? extends T> beanImplClass, Class<T> remoteInterface) throws NamingException {
+        return lookupEJB(APPLICATION_NAME, beanImplClass, remoteInterface);
+    }
+
+    /**
+     * Lookup for remote EJBs.
+     *
+     * @param applicationName
+     * @param beanImplClass
+     * @param remoteInterface
+     * @return
+     * @throws NamingException
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T lookupEJB(String applicationName, Class<? extends T> beanImplClass, Class<T> remoteInterface) throws NamingException {
         final Hashtable<String, String> jndiProperties = new Hashtable<String, String>();
         jndiProperties.put(Context.URL_PKG_PREFIXES, "org.jboss.ejb.client.naming");
         //        jndiProperties.put("jboss.naming.client.ejb.context", "true");
         final Context context = new InitialContext(jndiProperties);
 
-        return (T) context.lookup("ejb:/" + APPLICATION_NAME + "/" + beanImplClass.getSimpleName() + "!"
+        return (T) context.lookup("ejb:/" + applicationName + "/" + beanImplClass.getSimpleName() + "!"
                 + remoteInterface.getName());
     }
 
