@@ -429,4 +429,101 @@ public interface VaultMessages {
     @Message(id = 21044, value = "Secured attribute (password) doesn't exist.")
     String cmdLineSecuredAttributeDoesNotExist();
 
+    /**
+     * i18n version of string from Vault Tool utility
+     *
+     * @return
+     */
+    @Message(id = 21045, value = "Remove secured attribute from the Vault")
+    String cmdLineRemoveSecuredAttribute();
+
+    /**
+     * i18n version of string from Vault Tool utility
+     *
+     * @return
+     */
+    @Message(id = 21046, value = "Secured attribute %s has been successfuly removed from vault")
+    String messageAttributeRemovedSuccessfuly(String displayFormattedAttribute);
+
+    /**
+     * i18n version of string from Vault Tool utility
+     *
+     * @return
+     */
+    @Message(id = 21047, value = "Secured attribute %s was not removed from vault, check whether it exist")
+    String messageAttributeNotRemoved(String displayFormattedAttribute);
+
+    /**
+     * i18n version of string from Vault Tool utility
+     *
+     * @return
+     */
+    @Message(id = 21048, value = "Please enter a Digit::  0: Store a secured attribute  1: Check whether a secured attribute exists  2: Remove secured attribute  3: Exit")
+    String interactionCommandOptions();
+
+    /**
+     * i18n version of string from Vault Tool utility
+     *
+     * @return
+     */
+    @Message(id = 21049, value = "Task: Store a secured attribute")
+    String taskStoreSecuredAttribute();
+
+    /**
+     * i18n version of string from Vault Tool utility
+     *
+     * @return
+     */
+    @Message(id = 21050, value = "Please enter secured attribute value (such as password)")
+    String interactivePromptSecureAttributeValue();
+
+    /**
+     * i18n version of string from Vault Tool utility
+     *
+     * @return
+     */
+    @Message(id = 21051, value = "Enter Vault Block:")
+    String interactivePromptVaultBlock();
+
+    /**
+     * i18n version of string from Vault Tool utility
+     *
+     * @return
+     */
+    @Message(id = 21052, value = "Enter Attribute Name:")
+    String interactivePromptAttributeName();
+
+    /**
+     * i18n version of string from Vault Tool utility
+     *
+     * @return
+     */
+    @Message(id = 21053, value = "Task: Verify whether a secured attribute exists")
+    String taskVerifySecuredAttributeExists();
+
+    /**
+     * i18n version of string from Vault Tool utility
+     *
+     * @return
+     */
+    @Message(id = 21054, value = "No value has been stored for %s")
+    String interactiveMessageNoValueStored(String displayFormattedAttribute);
+
+    /**
+     * i18n version of string from Vault Tool utility
+     *
+     * @return
+     */
+    @Message(id = 21055, value = "A value exists for %s")
+    String interactiveMessageValueStored(String displayFormattedAttribute);
+
+    /**
+     * i18n version of string from Vault Tool utility
+     *
+     * @return
+     */
+    @Message(id = 21056, value = "Task: Remove secured attribute")
+    String taskRemoveSecuredAttribute();
+
+
 }

@@ -42,61 +42,90 @@ public class VaultInteraction {
         Console console = System.console();
 
         if (console == null) {
-            System.err.println("No console.");
+            System.err.println(VaultMessages.MESSAGES.noConsole());
             System.exit(1);
         }
 
         Scanner in = new Scanner(System.in);
         while (true) {
-            String commandStr = "Please enter a Digit::   0: Store a secured attribute " + " 1: Check whether a secured attribute exists "
-                    + " 2: Exit";
+            String commandStr = VaultMessages.MESSAGES.interactionCommandOptions();
 
             System.out.println(commandStr);
             int choice = in.nextInt();
             switch (choice) {
                 case 0:
-                    System.out.println("Task: Store a secured attribute");
-                    char[] attributeValue = VaultInteractiveSession.getSensitiveValue("Please enter secured attribute value (such as password)");
+                    System.out.println(VaultMessages.MESSAGES.taskStoreSecuredAttribute());
+                    char[] attributeValue = VaultInteractiveSession.getSensitiveValue(VaultMessages.MESSAGES.interactivePromptSecureAttributeValue());
                     String vaultBlock = null;
 
                     while (vaultBlock == null || vaultBlock.length() == 0) {
-                        vaultBlock = console.readLine("Enter Vault Block:");
+                        vaultBlock = console.readLine(VaultMessages.MESSAGES.interactivePromptVaultBlock());
                     }
 
                     String attributeName = null;
 
                     while (attributeName == null || attributeName.length() == 0) {
-                        attributeName = console.readLine("Enter Attribute Name:");
+                        attributeName = console.readLine(VaultMessages.MESSAGES.interactivePromptAttributeName());
                     }
                     try {
                         vaultNISession.addSecuredAttributeWithDisplay(vaultBlock, attributeName, attributeValue);
                     } catch (Exception e) {
-                        System.out.println("Exception occurred:" + e.getLocalizedMessage());
+                        System.out.println(VaultMessages.MESSAGES.problemOcurred() + "\n" + e.getLocalizedMessage());
                     }
                     break;
                 case 1:
-                    System.out.println("Task: Verify whether a secured attribute exists");
+                    System.out.println(VaultMessages.MESSAGES.taskVerifySecuredAttributeExists());
                     try {
                         vaultBlock = null;
 
                         while (vaultBlock == null || vaultBlock.length() == 0) {
-                            vaultBlock = console.readLine("Enter Vault Block:");
+                            vaultBlock = console.readLine(VaultMessages.MESSAGES.interactivePromptVaultBlock());
                         }
 
                         attributeName = null;
 
                         while (attributeName == null || attributeName.length() == 0) {
-                            attributeName = console.readLine("Enter Attribute Name:");
+                            attributeName = console.readLine(VaultMessages.MESSAGES.interactivePromptAttributeName());
                         }
-                        if (!vaultNISession.checkSecuredAttribute(vaultBlock, attributeName))
-                            System.out.println("No value has been store for (" + vaultBlock + ", " + attributeName + ")");
-                        else
-                            System.out.println("A value exists for (" + vaultBlock + ", " + attributeName + ")");
+                        if (!vaultNISession.checkSecuredAttribute(vaultBlock, attributeName)) {
+                            System.out.println(VaultMessages.MESSAGES.interactiveMessageNoValueStored(VaultSession
+                                    .blockAttributeDisplayFormat(vaultBlock, attributeName)));
+                        } else {
+                            System.out.println(VaultMessages.MESSAGES.interactiveMessageValueStored(VaultSession
+                                    .blockAttributeDisplayFormat(vaultBlock, attributeName)));
+                        }
                     } catch (Exception e) {
-                        System.out.println("Exception occurred:" + e.getLocalizedMessage());
+                        System.out.println(VaultMessages.MESSAGES.problemOcurred() + "\n" + e.getLocalizedMessage());
+                    }
+                    break;
+                case 2:
+                    System.out.println(VaultMessages.MESSAGES.taskRemoveSecuredAttribute());
+                    try {
+                        vaultBlock = null;
+
+                        while (vaultBlock == null || vaultBlock.length() == 0) {
+                            vaultBlock = console.readLine(VaultMessages.MESSAGES.interactivePromptVaultBlock());
+                        }
+
+                        attributeName = null;
+
+                        while (attributeName == null || attributeName.length() == 0) {
+                            attributeName = console.readLine(VaultMessages.MESSAGES.interactivePromptAttributeName());
+                        }
+                        if (!vaultNISession.removeSecuredAttribute(vaultBlock, attributeName)) {
+                            System.out.println(VaultMessages.MESSAGES.messageAttributeNotRemoved(VaultSession
+                                    .blockAttributeDisplayFormat(vaultBlock, attributeName)));
+                        } else {
+                            System.out.println(VaultMessages.MESSAGES
+                                    .messageAttributeRemovedSuccessfuly(VaultSession.blockAttributeDisplayFormat(
+                                            vaultBlock, attributeName)));
+                        }
+                    } catch (Exception e) {
+                        System.out.println(VaultMessages.MESSAGES.problemOcurred() + "\n" + e.getLocalizedMessage());
                     }
                     break;
                 default:
+                    in.close();
                     System.exit(0);
             }
         }

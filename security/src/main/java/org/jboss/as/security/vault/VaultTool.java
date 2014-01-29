@@ -52,6 +52,7 @@ public class VaultTool {
     public static final String ATTRIBUTE_PARAM = "attribute";
     public static final String SEC_ATTR_VALUE_PARAM = "sec-attr";
     public static final String CHECK_SEC_ATTR_EXISTS_PARAM = "check-sec-attr";
+    public static final String REMOVE_SEC_ATTR_PARAM = "remove-sec-attr";
     public static final String HELP_PARAM = "help";
 
     private VaultInteractiveSession session = null;
@@ -78,8 +79,6 @@ public class VaultTool {
             try {
                 tool = new VaultTool(args);
                 returnVal = tool.execute();
-                if (returnVal != 100)
-                    tool.summary();
             } catch (Exception e) {
                 System.err.println(VaultMessages.MESSAGES.problemOcurred());
                 e.printStackTrace(System.err);
@@ -117,9 +116,11 @@ public class VaultTool {
                             tool.setSession(null);
                             break;
                         default:
+                            in.close();
                             System.exit(0);
                     }
                 } catch (InputMismatchException e) {
+                    in.close();
                     System.exit(0);
                 }
             }
@@ -160,9 +161,11 @@ public class VaultTool {
         OptionGroup og = new OptionGroup();
         Option x = new Option("x", SEC_ATTR_VALUE_PARAM, true, VaultMessages.MESSAGES.cmdLineSecuredAttribute());
         Option c = new Option("c", CHECK_SEC_ATTR_EXISTS_PARAM, false, VaultMessages.MESSAGES.cmdLineCheckAttribute());
+        Option r = new Option("r", REMOVE_SEC_ATTR_PARAM, false, VaultMessages.MESSAGES.cmdLineRemoveSecuredAttribute());
         Option h = new Option("h", HELP_PARAM, false, VaultMessages.MESSAGES.cmdLineHelp());
         og.addOption(x);
         og.addOption(c);
+        og.addOption(r);
         og.addOption(h);
         og.setRequired(true);
         options.addOptionGroup(og);
@@ -197,10 +200,20 @@ public class VaultTool {
                 System.out.println(VaultMessages.MESSAGES.cmdLineSecuredAttributeDoesNotExist());
                 return 5;
             }
+        } if (cmdLine.hasOption(REMOVE_SEC_ATTR_PARAM)) {
+            // remove password
+            if (nonInteractiveSession.removeSecuredAttribute(vaultBlock, attributeName)) {
+                System.out.println(VaultMessages.MESSAGES.messageAttributeRemovedSuccessfuly(VaultSession.blockAttributeDisplayFormat(vaultBlock, attributeName)));
+                return 0;
+            } else {
+                System.out.println(VaultMessages.MESSAGES.messageAttributeNotRemoved(VaultSession.blockAttributeDisplayFormat(vaultBlock, attributeName)));
+                return 6;
+            }
         } else {
             // add password
             String password = cmdLine.getOptionValue(SEC_ATTR_VALUE_PARAM, "password");
             nonInteractiveSession.addSecuredAttributeWithDisplay(vaultBlock, attributeName, password.toCharArray());
+            summary();
             return 0;
         }
     }
