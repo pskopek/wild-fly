@@ -104,8 +104,12 @@ public class MessagingSubsystemRootResourceDefinition extends PersistentResource
                 ServerDefinition.JOURNAL_MESSAGES_TABLE,
                 ServerDefinition.JOURNAL_BINDINGS_TABLE,
                 ServerDefinition.JOURNAL_LARGE_MESSAGES_TABLE,
-                ServerDefinition.JOURNAL_DATABASE);
+                ServerDefinition.JOURNAL_DATABASE
+                );
+        rejectDefinedAttributeWithDefaultValue(server, ServerDefinition.CREDENTIAL_REFERENCE);
+
         ResourceTransformationDescriptionBuilder bridge = server.addChildResource(MessagingExtension.BRIDGE_PATH);
+        rejectDefinedAttribute(bridge, BridgeDefinition.CREDENTIAL_REFERENCE);
         // reject producer-window-size introduced in management version 2.0.0 if it is defined and different from the default value.
         rejectDefinedAttributeWithDefaultValue(bridge, BridgeDefinition.PRODUCER_WINDOW_SIZE);
         ResourceTransformationDescriptionBuilder clusterConnection = server.addChildResource(MessagingExtension.CLUSTER_CONNECTION_PATH);
